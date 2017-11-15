@@ -15,6 +15,7 @@ Note: Twitter only allows access to a users most recent 3240 tweets.
 
 import tweepy
 import csv
+import html
  
 #consumer keys and access tokens, used for OAuth Twitter API
 consumer_key = 'XQCnw2YBIgJCDJthDT6AQTiPD'
@@ -60,6 +61,8 @@ def get_all_tweets(screen_name):
 	#get extended tweets
 	for tweet in alltweets:
 		tweet.text = tweet.full_text
+		tweet.text = html.unescape(tweet.text)
+		
 	
 	#transform the tweepy tweets into a 2D array that will populate the csv	
 	outtweets = [[tweet.id_str, tweet.created_at, tweet.text] for tweet in alltweets]
@@ -76,4 +79,5 @@ def get_all_tweets(screen_name):
 if __name__ == '__main__':
 	#pass in the username of the account you want to download
 	get_all_tweets("realDonaldTrump")
+
 
