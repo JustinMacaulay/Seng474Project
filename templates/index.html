@@ -1,0 +1,85 @@
+<!doctype html>
+<head>
+  <title>
+    Trumpy
+  </title>
+  <script type="text/javascript" src="/static/jquery.js"></script>
+  <link rel="stylesheet" href="/static/bootstrap.css"/>
+</head>
+
+<body>
+  <div class="mainpage container">
+    <h1>
+      Hi friends
+    </h1>
+    <div class="col-md-4">
+
+    <br/><br/><br/>
+
+    <form id="plain_form" name="plain_form">
+      <textarea id="plain_text" name="plain_text" class="form-control" rows="3" cols="30" placeholder="Input text here for analysis"></textarea>
+      <br/>
+      <button class="btn btn-primary btn-sm" onclick="test_plain_text();return false;">Analyze</button>
+    </form>
+    <br/>
+    <br/>
+    <br/>
+    <form id="tweet_form" name="tweet_form">
+      <input id="tweet_text" name="tweet_text" class="form-control" type="text" placeholder="Please input a tweet id here"></input>
+      <br/>
+      <button class="btn btn-primary btn-sm" onclick="test_tweet();return false;">Analyze</button>
+    </form>
+  </div>
+    <div id="results" name="results" class="col-md-7 col-md-offset-1">
+
+    </div>
+  </div>
+</body>
+
+<script type="text/javascript">
+function new_results(result){
+  console.log(result)
+  result_string = "Tweet Text: " + result["tweet"];
+  result_string += "\n<ul>";
+  result_string += "<li>Elon: " + (100 * result["prediction_elon"]).toFixed(6) + "%<div class='progress'>\
+    <div class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='40'\
+    aria-valuemin='0' aria-valuemax='100' style='width:" + (100 * result["prediction_elon"]).toFixed(3) + "%'>\
+    </div></div></li>";
+  result_string += "<li>Ellen: " + (100 * result["prediction_ellen"]).toFixed(6) + "%<div class='progress'>\
+    <div class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='40'\
+    aria-valuemin='0' aria-valuemax='100' style='width:" + (100 * result["prediction_ellen"]).toFixed(3) + "%'>\
+    </div></div></li>";
+  result_string += "<li>Obama: " + (100 * result["prediction_obama"]).toFixed(6) + "%<div class='progress'>\
+    <div class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='40'\
+    aria-valuemin='0' aria-valuemax='100' style='width:" + (100 * result["prediction_obama"]).toFixed(3) + "%'></div></div></li>";
+  result_string += "<li>Trump: " + (100 * result["prediction_trump"]).toFixed(6) + "%<div class='progress'>\
+    <div class='progress-bar progress-bar-danger progress-bar-striped active' role='progressbar' aria-valuenow='40'\
+    aria-valuemin='0' aria-valuemax='100' style='width:" + (100 * result["prediction_trump"]).toFixed(3) + "%'></div></div></li></ul>";
+  $("#results").html(result_string);
+
+}
+
+function test_tweet(){
+  $.ajax({
+    url:'/tweet_test/' + $("#tweet_text").val(),
+    type:'GET',
+    success:function(resp){
+      new_results(resp)
+    }
+  });
+  return false;
+}
+
+function test_plain_text(){
+  $.ajax({
+    url:'/plain_text',
+    type:'POST',
+    data:{"plain_text":$("#plain_text").val()},
+    success:function(resp){
+
+      new_results(resp)
+    }
+  });
+  return false;
+}
+</script>
